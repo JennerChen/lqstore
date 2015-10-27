@@ -8,8 +8,8 @@ function validateUser() {
 }
 
 function initSideBar() {
-    $("#messagesBody").slideToggle("fast"); // The Body of "Messages" is already opened in the design sample.
-
+    $("#messagesBody").slideToggle("fast"); 
+    $('#sideBar').hide();
     $("#dashboard").click(function() {
         $(".tab").removeClass("tabSelected");
         $(".tab").addClass("tabNoSelected");
@@ -47,66 +47,75 @@ function initSideBar() {
             $('#sideBar').hide();
             $('#showSideBar').show();
         })
-    }).trigger('click');
+    })
     $('#showSideBar').click(function(event) {
         if ($('#sideBar').css('display') == 'none') {
             $('#showSideBar').hide();
             $('#sideBar').show().coolAnimate('bounceInLeft')
         }
-    });
+    }).trigger('click');
 }
 var table = null;
 function queryData() {
-	var loader = loading('#tb_content');
 	var Product = Bmob.Object.extend("Product");
 	var query = new Bmob.Query(Product);
-	// 查询所有数据
-	query.find({
-		success: function(results) {
-			var ds = [];
-			// 循环处理查询到的数据
-			for (var i = 0; i < results.length; i++) {
-				var temp = results[i].attributes;
-					temp.id = results[i].id;
-					temp.createdAt = results[i].createdAt;
-				ds.push(temp);
-			}
-			table = geraltTable({
-				dataSource: ds,
-				selector: $('#tb_content'),
-				tableStyle:'TRTD',
-				rowCreated: function(row) {
-					$('td:first',$(row)).addClass('overflow col-md-2');
-					$('td:eq(1)',$(row)).addClass('overflow col-md-2');
-					$('td:eq(2)',$(row)).addClass('overflow col-md-2');
-					$('td:eq(3)',$(row)).addClass('col-md-4');
-					$('td:eq(4)',$(row)).addClass('overflow col-md-2');
-				},
-				rowMap: {
-					productId: function(data) {
-						return data;
-					},
-					name: function(data) {
-						return data;
-					},
-					description: function(data, row) {
-						return data;
-					},
-					photo: function(data){
-						var output = "<img src='"+data+"' style='max-height:50px'></img>"
-						return output;
-					},
-					createdAt: function(data){
-						return data;
-					}
-				},
-			});
-			loader.dismiss();
-		},
-		error: function(error) {
-			alert("查询失败: " + error.code + " " + error.message);
-		}
-	});
+    // 查询所有数据
+    table = geraltTable({
+        selector: $('#tb_content'),
+        tableStyle:'TRTD',
+        paging:{
+            pageSize:10
+        },
+        dataRemote:{
+            bmob:query,
+            callback: function(results){
+                var ds = [];
+                // 循环处理查询到的数据
+                for (var i = 0; i < results.length; i++) {
+                    var temp = results[i].attributes;
+                        temp.id = results[i].id;
+                        temp.createdAt = results[i].createdAt;
+                    ds.push(temp);
+                }
+                return ds;
+            },
+            loading: {
+                start: function(){
+                    return loading($('#tb_content'));
+                },
+                stop: function(loader){
+                    loader.dismiss();
+                }
+            }
+        },
+        rowCreated: function(row,metaData) {
+            $(row).data('meta',metaData);
+            $('td:first',$(row)).addClass('overflow col-md-2');
+            $('td:eq(1)',$(row)).addClass('overflow col-md-2');
+            $('td:eq(2)',$(row)).addClass('overflow col-md-2');
+            $('td:eq(3)',$(row)).addClass('col-md-4');
+            $('td:eq(4)',$(row)).addClass('overflow col-md-2');
+        },
+        rowMap: {
+            productId: function(data) {
+                return data;
+            },
+            name: function(data) {
+                return data;
+            },
+            description: function(data, row) {
+                return data;
+            },
+            photo: function(data){
+                var output = "<img src='"+data+"' style='max-height:50px'></img>"
+                return output;
+            },
+            createdAt: function(data){
+                return data;
+	
+            }
+        },
+    });
 }
 function addNewProduct() {
     var Product = Bmob.Object.extend("Product"),

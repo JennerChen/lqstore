@@ -1,4 +1,4 @@
-
+'use strict';
 function login(name, pwd){
 	 Bmob.User.logIn(name, pwd, {
         success: function(user) {

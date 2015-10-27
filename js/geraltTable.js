@@ -87,9 +87,11 @@ var geraltTable = function(options) {
 		});
 		// pagination 
 		if(paging){
-			if($(paging.paginationSelector).html().trim()=="" || api.page.rebuildpager){
-				$(paging.paginationSelector).empty();
-				generateTablePagination();
+			if(paging.paginationSelector && $(paging.paginationSelector).length==1){
+				if($(paging.paginationSelector).html().trim()=="" || api.page.rebuildpager){
+					$(paging.paginationSelector).empty();
+					generateTablePagination();
+				}
 			}
 		}
 	}
@@ -168,7 +170,13 @@ var geraltTable = function(options) {
 				}
 				// bmob style paging
 				if(dataRemote.bmob){
-					var query = dataRemote.bmob;
+					var query = dataRemote.bmob,
+						loadingTemp = dataRemote.loading ? dataRemote.loading : undefined;
+					if(loadingTemp){
+						if($.isFunction(loadingTemp.start)){
+							loadingTemp.currentLoader =loadingTemp.start();
+						}
+					}
 					// get total
 					query.count({
 						success: function(result) {
@@ -180,13 +188,20 @@ var geraltTable = function(options) {
 					});
 					query.limit(pageSize).skip(pageSize*(pageNum-1)).find({
 						success: function(results){
+							if(loadingTemp){
+								if($.isFunction(loadingTemp.stop)){
+									loadingTemp.stop(loadingTemp.currentLoader) 
+								}
+							}
 							dataSource =dataRemote.callback(results);
 							draw(dataSource);
+							pageNum = num;
 						},
 						error: function(err){
 							console.error(err)
 						}
 					})
+					return true;
 				}
 			}
 			if (Math.ceil(dataSource.length / pageSize) >= num) {
