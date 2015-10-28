@@ -56,6 +56,7 @@ var geraltTable = function(options) {
 		if ($.isFunction(rowCreated)) {
 			rowCreated(row,rowData);
 		}
+		return row;
 	}
 	function generateTablePagination(){
 		if(dataRemote){
@@ -93,6 +94,12 @@ var geraltTable = function(options) {
 					generateTablePagination();
 				}
 			}
+		}
+	}
+	function drawRow(rowData,callback){
+		var row =generateTableRow(rowData);
+		if($.isFunction(callback)){
+			callback(row);
 		}
 	}
 	api.page = function() {
@@ -243,6 +250,10 @@ var geraltTable = function(options) {
 
 	api.draw = function(data){
 		draw(data);
+	}
+	// draw a row(not update whole table), often use for add a row
+	api.drawRow = function(data,callback){
+		drawRow(data,callback);
 	}
 	// work only in dataRemote mode 
 	api.flush = function(){

@@ -131,6 +131,16 @@ function addNewProduct() {
     	photo:p_photo
     }, {
         success: function(object) {
+            if(table){
+                var ds = object.attributes;
+                ds.id = object.id;
+                ds.createdAt = object.createdAt;
+                table.drawRow(ds,function(row){
+                    $(row).css('background-color','#5BC0DE');
+                })
+            }
+            $('input',$('#newProduct')).val('');
+            currentUploadImg = null;
         	flashMessage('商品添加成功',{
         		style:'SUCCESS',
         	})
