@@ -8,6 +8,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="../css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../css/vendor/fileupload/fileinput.css">
     <link rel="stylesheet" type="text/css" href="../css/animate.css">
     <link rel="stylesheet" type="text/css" href="../css/load.css">
     <link rel="stylesheet" type="text/css" href="../css/global.css">
@@ -15,6 +16,9 @@
     <script type="text/javascript" src='../js/vendor/jquery.min.js'></script>
     <script type="text/javascript" src='../js/vendor/bmob-min.js'></script>
     <script type="text/javascript" src='../js/vendor/bootstrap.js'></script>
+    <script type="text/javascript" src='../js/vendor/fileinput/plugins/canvas-to-blob.min.js'></script>
+    <script type="text/javascript" src='../js/vendor/fileinput/fileinput.js'></script>
+    <script type="text/javascript" src='../js/vendor/fileinput/fileinput_locale_zh.js'></script>
     <script type="text/javascript" src='../js/geraltTable.js'></script>
     <script type="text/javascript" src='../js/global.js'></script>
     <script type="text/javascript" src='../js/control.js'></script>
@@ -113,14 +117,14 @@
 	    			</tbody>
 	    			<tfoot id='newProduct'>
 	    				<tr>
-	    					<td class='col-md-2'><input type='text' class='form-control' placeholder='商品编号'></td>
-	    					<td class='col-md-2'><input type='text' class='form-control' placeholder='名称'></td>
-	    					<td class='col-md-2'><input type='text' class='form-control' placeholder='描述'></td>
+	    					<td class='col-md-2'><input type='text' class='form-control' placeholder='商品编号' id='productId'></td>
+	    					<td class='col-md-2'><input type='text' class='form-control' placeholder='名称' id='productName'></td>
+	    					<td class='col-md-2'><input type='text' class='form-control' placeholder='描述' id='productDesc'></td>
 	    					<td class='col-md-4'>
-	    						<div class="input-group">
-	    						  <input type='file' class='form-control' placeholder='照片' id='fileupload'>
-	    						  <span class="input-group-btn" ><button class="btn btn-secondary btn-danger" id='uploadImg' disabled>上传</button></span>
-	    						</div>
+	    						<!-- <div class="input-group"> -->
+	    						  <input type='file' class='form-control' multiple  id='fileupload'>
+	    						  <!-- <span class="input-group-btn" ><button class="btn btn-secondary btn-danger" id='uploadImg' disabled>上传</button></span> -->
+	    						<!-- </div> -->
 	    					</td>
 	    					<td class='col-md-2'><button type='button' class='btn btn-success' id='addNewProduct'>添加</button></td>
 	    				</tr>

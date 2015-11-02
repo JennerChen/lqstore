@@ -3,4 +3,15 @@
 	text-overflow:ellipsis;
 	white-space:nowrap;
 }
-
+.ok{
+	border: 3px solid #5CB85C;
+}
+.err{
+	border: 3px solid #C9302C;
+}
+input{
+	transition: border-color 1s;
+	-moz-transition: border-color 1s; /* Firefox 4 */
+	-webkit-transition: border-color 1s; /* Safari 和 Chrome */
+	-o-transition: border-color 1s; /* Opera */
+}

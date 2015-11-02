@@ -8,7 +8,7 @@ function validateUser() {
 }
 
 function initSideBar() {
-    $("#messagesBody").slideToggle("fast"); 
+    $("#messagesBody").slideToggle("fast");
     $('#sideBar').hide();
     $("#dashboard").click(function() {
         $(".tab").removeClass("tabSelected");
@@ -56,45 +56,46 @@ function initSideBar() {
     }).trigger('click');
 }
 var table = null;
+
 function queryData() {
-	var Product = Bmob.Object.extend("Product");
-	var query = new Bmob.Query(Product);
+    var Product = Bmob.Object.extend("Product");
+    var query = new Bmob.Query(Product);
     // 查询所有数据
     table = geraltTable({
         selector: $('#tb_content'),
-        tableStyle:'TRTD',
-        paging:{
-            pageSize:10
+        tableStyle: 'TRTD',
+        paging: {
+            pageSize: 5
         },
-        dataRemote:{
-            bmob:query,
-            callback: function(results){
+        dataRemote: {
+            bmob: query,
+            callback: function(results) {
                 var ds = [];
                 // 循环处理查询到的数据
                 for (var i = 0; i < results.length; i++) {
                     var temp = results[i].attributes;
-                        temp.id = results[i].id;
-                        temp.createdAt = results[i].createdAt;
+                    temp.id = results[i].id;
+                    temp.createdAt = results[i].createdAt;
                     ds.push(temp);
                 }
                 return ds;
             },
             loading: {
-                start: function(){
+                start: function() {
                     return loading($('#tb_content'));
                 },
-                stop: function(loader){
+                stop: function(loader) {
                     loader.dismiss();
                 }
             }
         },
-        rowCreated: function(row,metaData) {
-            $(row).data('meta',metaData);
-            $('td:first',$(row)).addClass('overflow col-md-2');
-            $('td:eq(1)',$(row)).addClass('overflow col-md-2');
-            $('td:eq(2)',$(row)).addClass('overflow col-md-2');
-            $('td:eq(3)',$(row)).addClass('col-md-4');
-            $('td:eq(4)',$(row)).addClass('overflow col-md-2');
+        rowCreated: function(row, metaData) {
+            $(row).data('meta', metaData);
+            $('td:first', $(row)).addClass('overflow col-md-2');
+            $('td:eq(1)', $(row)).addClass('overflow col-md-2');
+            $('td:eq(2)', $(row)).addClass('overflow col-md-2');
+            $('td:eq(3)', $(row)).addClass('col-md-4');
+            $('td:eq(4)', $(row)).addClass('overflow col-md-2');
         },
         rowMap: {
             productId: function(data) {
@@ -106,71 +107,129 @@ function queryData() {
             description: function(data, row) {
                 return data;
             },
-            photo: function(data){
-                var output = "<img src='"+data+"' style='max-height:50px'></img>"
+            photo: function(data) {
+                var output = "<img src='" + data + "' style='max-height:50px'></img>"
                 return output;
             },
-            createdAt: function(data){
+            createdAt: function(data) {
                 return data;
-	
+
             }
         },
     });
 }
+
 function addNewProduct() {
     var Product = Bmob.Object.extend("Product"),
-    	product = new Product();
-    var p_pId = $('input:first',$('#newProduct')).val(),
-    	p_name = $('input:eq(1)',$('#newProduct')).val(),
-    	p_description = $('input:eq(2)',$('#newProduct')).val(),
-    	p_photo = currentUploadImg;
+        product = new Product();
+    var p_pId = $('input:first', $('#newProduct')).val(),
+        p_name = $('input:eq(1)', $('#newProduct')).val(),
+        p_description = $('input:eq(2)', $('#newProduct')).val(),
+        p_photo = currentUploadImg;
     product.save({
-    	productId:p_pId,
-    	name:p_name,
-    	description:p_description,
-    	photo:p_photo
+        productId: p_pId,
+        name: p_name,
+        description: p_description,
+        photo: p_photo
     }, {
         success: function(object) {
-            if(table){
+            if (table) {
                 var ds = object.attributes;
                 ds.id = object.id;
                 ds.createdAt = object.createdAt;
-                table.drawRow(ds,function(row){
-                    $(row).css('background-color','#5BC0DE');
+                table.drawRow(ds, function(row) {
+                    $(row).css('background-color', '#5BC0DE');
                 })
             }
-            $('input',$('#newProduct')).val('');
+            $('input', $('#newProduct')).val('');
             currentUploadImg = null;
-        	flashMessage('商品添加成功',{
-        		style:'SUCCESS',
-        	})
+            flashMessage('商品添加成功', {
+                style: 'SUCCESS',
+            })
         },
-		error: function(model, error) {
-			flashMessage('添加失败,请稍后再试', {
-				style: 'DANAGER',
-			})
-		}
+        error: function(model, error) {
+            flashMessage('添加失败,请稍后再试', {
+                style: 'DANAGER',
+            })
+        }
     });
 }
 var currentUploadImg = null;
 
 function initAddNewProduct() {
-	$('#uploadImg').click(function(event) {
-		var loader = loading('#tb_content');
-		var fileUploadControl = $("#fileupload")[0];
-		if (fileUploadControl.files.length > 0) {
-			var file = fileUploadControl.files[0];
-			var name = "product.jpg";
-			var file = new Bmob.File(name, file);
-			file.save().then(function(obj) {
-				currentUploadImg = obj.url();
-				flashMessage('图片上传成功',{
-					style:'SUCCESS',
-				})
-				loader.dismiss();
-			});
-		};
-	});
+    // $('#uploadImg').click(function(event) {
+    //     var loader = loading('#tb_content');
+    //     var fileUploadControl = $("#fileupload")[0];
+    //     if (fileUploadControl.files.length > 0) {
+    //         var file = fileUploadControl.files[0];
+    //         var name = "product.jpg";
+    //         var file = new Bmob.File(name, file);
+    //         file.save().then(function(obj) {
+    //             currentUploadImg = obj.url();
+    //             flashMessage('图片上传成功', {
+    //                 style: 'SUCCESS',
+    //             })
+    //             loader.dismiss();
+    //         });
+    //     };
+    // })
+    $('#fileupload').fileinput({
+        'showUpload': false,
+        // 'previewFileType': 'any',
+        // showPreview:false,
+        multiple:true,
+        showCaption: false,
+        showRemove:false,
+        showCancel:false,
+        // maxFileCount: 10,
+        resizeImage: true,
+        maxImageWidth: 40,
+        maxImageHeight: 30,
+        allowedFileExtensions: ["jpg", "png", "gif"],
+         overwriteInitial: false,
+        language:'zh',
+         // mainClass: "input-group-lg"
+
+    });
+    $('#productId').blur(function(event) {
+        var pid = $(this).val();
+        if (pid) {
+            var Product = Bmob.Object.extend("Product"),
+                query = new Bmob.Query(Product);
+            query.equalTo("productId", pid).find({
+                success: function(result) {
+                    if (result.length == 0) {
+                        $('#productId').data('validate', true).addClass('ok').removeClass('err');
+                    } else {
+                        $('#productId').data('validate', false).addClass('err').removeClass('ok').val('').attr('placeholder', '编号重复,请重新输入');
+                    }
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            })
+        }
+    });
+
+    $('#productName').blur(function(event) {
+        var name = $(this).val()
+        if (name) {
+            var Product = Bmob.Object.extend("Product"),
+                query = new Bmob.Query(Product);
+            query.equalTo("name", name).find({
+                success: function(result) {
+                    if (result.length == 0) {
+                        $('#productName').data('validate', true).addClass('ok').removeClass('err');
+                    } else {
+                        $('#productName').data('validate', false).addClass('err').removeClass('ok').val('').attr('placeholder', '名字重复,请重新输入');
+                    }
+                },
+                error: function(err) {
+                    console.error(err);
+                }
+            })
+        }
+    });
 }
 $(function() {
     initBmob();
@@ -179,11 +238,11 @@ $(function() {
     initAddNewProduct();
     $('#addNewProduct').click(addNewProduct);
     $('#fileupload').change(function(event) {
-    	if($(this).val() && $(this).val()!=''){
-    		$('#uploadImg').removeAttr('disabled');
-    	}else{
-    		$('#uploadImg').prop('disabled',true);
-    	}
+        if ($(this).val() && $(this).val() != '') {
+            $('#uploadImg').removeAttr('disabled');
+        } else {
+            $('#uploadImg').prop('disabled', true);
+        }
     });
     queryData();
 })
