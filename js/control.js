@@ -132,16 +132,18 @@ define(function(require){
 
     function addNewProduct() {
         var Product = Bmob.Object.extend("Product"),
+            Photo = Bmob.Object.extend("Photo"),
             product = new Product();
         var p_pId = $('input:first', $('#newProduct')).val(),
             p_name = $('input:eq(1)', $('#newProduct')).val(),
             p_description = $('input:eq(2)', $('#newProduct')).val(),
             p_photo = currentUploadImg;
+
         product.save({
             productId: p_pId,
             name: p_name,
             description: p_description,
-            photo: p_photo
+            photo: currentUploadImg
         }, {
             success: function(object) {
                 if (table) {
@@ -187,24 +189,7 @@ define(function(require){
                 });
             };
         })
-        // $('#fileupload').fileinput({
-        //     'showUpload': false,
-        //     // 'previewFileType': 'any',
-        //     // showPreview:false,
-        //     multiple:true,
-        //     showCaption: false,
-        //     showRemove:false,
-        //     showCancel:false,
-        //     // maxFileCount: 10,
-        //     resizeImage: true,
-        //     maxImageWidth: 40,
-        //     maxImageHeight: 30,
-        //     allowedFileExtensions: ["jpg", "png", "gif"],
-        //      overwriteInitial: false,
-        //     language:'zh',
-        //      // mainClass: "input-group-lg"
-
-        // });
+    
         $('#productId').blur(function(event) {
             var pid = $(this).val();
             if (pid) {

@@ -20,18 +20,12 @@ requirejs.config({
 });
 
 // Load the main app module to start the app
-// requirejs(["app/main"]);
-// ["jquery","bmob","common"], 
 define(function(require) {
 	require('jquery');
 	require('bmob');
 	require('sprintf');
 	require('bootstrap');
-	// file upload
-	// require('blob');
-	// require('fileupload');
-	// require('fileuploadzh');
-
+	// exports to global
 	window.Common = require('common');
 	require('geraltTable');
 	window.Control = require('control');
@@ -41,7 +35,9 @@ define(function(require) {
 		Control.validateUser();
 		Control.initSideBar();
 		Control.initAddNewProduct();
-		$('#addNewProduct').click(addNewProduct);
+		$('#addNewProduct').click(function(){
+			Control.addNewProduct();
+		});
 		$('#fileupload').change(function(event) {
 			if ($(this).val() && $(this).val() != '') {
 				$('#uploadImg').removeAttr('disabled');
