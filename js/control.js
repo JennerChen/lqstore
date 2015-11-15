@@ -112,8 +112,14 @@ define(function(require){
                     return data;
                 },
                 photo: function(data) {
-                    // console.log(data);
-                    var output = "<img src='" + data + "' style='max-height:50px'></img>";
+                    var output ="";
+                    $.each(data[0], function(index, val) {
+                         output += "<img src='" + val + "' style='max-height:50px'></img>";
+                         if(index>=5){
+                            return false;
+                         }
+                    });
+                    // var output = "<img src='" + data + "' style='max-height:50px'></img>";
                     // Bmob.Image.thumbnail({"image":data,"mode":0,"quality":100,"width":100}
 
                     //   ).then(function(obj) {
@@ -139,11 +145,12 @@ define(function(require){
             p_description = $('input:eq(2)', $('#newProduct')).val(),
             p_photo = currentUploadImg;
 
+        product.addUnique('photo',currentUploadImg);
         product.save({
             productId: p_pId,
             name: p_name,
             description: p_description,
-            photo: currentUploadImg
+            // photo: currentUploadImg
         }, {
             success: function(object) {
                 if (table) {

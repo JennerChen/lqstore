@@ -1951,7 +1951,7 @@
 				color: rgba(255, 255, 255, 0.75);
 				text-shadow: 0 0 0.5px rgba(255, 255, 255, 0.1875);
 				font-size: 1em;
-				text-transform: uppercase;
+				/*text-transform: uppercase;*/
 				letter-spacing: 3px;
 				padding: 0;
 				margin-top: 0.35em;
