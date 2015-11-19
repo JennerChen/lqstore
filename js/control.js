@@ -162,15 +162,10 @@ define(function(require){
                     })
                 }
                 $('input', $('#newProduct')).val('');
-                currentUploadImg = null;
-                Common.flashMessage('商品添加成功', {
-                    style: 'SUCCESS',
-                })
+                currentUploadImg = [];
             },
             error: function(model, error) {
-                Common.flashMessage('添加失败,请稍后再试', {
-                    style: 'DANAGER',
-                })
+                console.log(error);
             }
         });
     }
@@ -178,7 +173,7 @@ define(function(require){
 
     function initAddNewProduct() {
         $('#uploadImg').click(function(event) {
-            var loader = Common.loading('#tb_content');
+            // var loader = Common.loading('#tb_content');
             var fileUploadControl = $("#fileupload")[0];
             if (fileUploadControl.files.length > 0) {
                 var file = fileUploadControl.files[0];
@@ -186,13 +181,10 @@ define(function(require){
                 var file = new Bmob.File(name, file);
                 file.save().then(function(obj) {
                     currentUploadImg.push(obj.url());
-                    Common.flashMessage('图片上传成功', {
-                        style: 'SUCCESS',
-                    })
                     $('#uploadedPic').append(sprintf($('#uploadedPicTemp').html(), {
                         src: obj.url()
                     }))
-                    loader.dismiss();
+                    // loader.dismiss();
                 });
             };
         })
