@@ -1,9 +1,15 @@
-// table for search input page to solve websocket problems
+/**
+ * table plugins
+ * 自定义table生产插件, 用于当前项目的bmob连接方式
+ * @param  {obj} options 
+ * @return {api}        
+ */
 var geraltTable = function(options) {
 	const COL_HOLDER = 'GERALTTABLE_COL_HOLDER';
 	// table tr td 与 div+css区别: 
 	// tr,td组合表格可以适用于需要rowspan, colspan的复杂条件下使用,其他与div+css表格基本无区别
 	// div+css表格优势：布局语义化, 适合SEO, 简化代码
+	// tr, td优势: 稳定,传统,适用性广
 	/////////////////////
 	// 本例默认div布局 //
 	/////////////////////
@@ -128,6 +134,18 @@ var geraltTable = function(options) {
 					num = (++pageNum);
 					page.rebuildpager = (num%10==1); 
 					break;
+				case "first":
+					if(pageNum==1){
+						return false;
+					}
+					num = 1;
+					break;
+				case "last":
+					if(pageNum==total){
+						return false;
+					}
+					num = total;
+					break;
 				default :
 					num = parseInt(num);
 					break;
@@ -187,13 +205,13 @@ var geraltTable = function(options) {
 					// get total
 					query.count({
 						success: function(result) {
-							total = result;
+							total = Math.ceil(result/pageSize);
 						},
 						error: function(err){
 							console.error(err);
 						}
 					});
-					query.limit(pageSize).skip(pageSize*(pageNum-1)).find({
+					query.limit(pageSize).skip(pageSize*(num-1)).find({
 						success: function(results){
 							if(loadingTemp){
 								if($.isFunction(loadingTemp.stop)){
