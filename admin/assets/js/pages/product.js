@@ -199,32 +199,12 @@ function showBackendBusyMsg(){
         width: "100%"
     });
 }
-$(function(){
-    initBmob();
-    queryData();
-    $('#uploadPic').click(function(event) {
-        var loader = loading('#tb_content');
-        var fileUploadControl = $("#fileupload")[0];
-        if (fileUploadControl.files.length > 0) {
-            var file = fileUploadControl.files[0];
-            var name = "product.jpg";
-            var file = new Bmob.File(name, file);
-            file.save().then(function(obj) {
-                currentUploadImg.push(obj.url());
-                $('#uploadedPic').append(sprintf($('#uploadedPicTemp').html(), {
-                    src: obj.url()
-                }))
-                $("#fileupload").val('');
-                loader.dismiss();
-            });
-        };
-    })
+function bindEventsForElements(){
     /*
     Modal Dismiss
     */
     $(document).on('click', '.modal-dismiss', function (e) {
         e.preventDefault();
-
         $.magnificPopup.close();
     });
 
@@ -243,6 +223,23 @@ $(function(){
             });
         });
     });
+    $('#uploadPic').click(function(event) {
+        var loader = loading('#tb_content');
+        var fileUploadControl = $("#fileupload")[0];
+        if (fileUploadControl.files.length > 0) {
+            var file = fileUploadControl.files[0];
+            var name = "product.jpg";
+            var file = new Bmob.File(name, file);
+            file.save().then(function(obj) {
+                currentUploadImg.push(obj.url());
+                $('#uploadedPic').append(sprintf($('#uploadedPicTemp').html(), {
+                    src: obj.url()
+                }))
+                $("#fileupload").val('');
+                loader.dismiss();
+            });
+        };
+    })
     /*
     Form
     */
@@ -459,4 +456,9 @@ $(function(){
         }
 
     });
+}
+$(function(){
+    initBmob();
+    queryData();
+    bindEventsForElements();
 })

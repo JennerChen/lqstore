@@ -7,7 +7,23 @@ function queryData() {
         selector: $('#tb_content'),
         tableStyle: 'TRTD',
         paging: {
-            pageSize: 5
+            pageSize: 5,
+            paginationSelector: $('#tb_content').siblings('tfoot'),
+            generateCallback: function(t,sub,page){
+                var dataSet = [];
+                for (var i = page.pageTotal(); i > 0; i--) {
+                    dataSet.splice(0,0,i);
+                };
+                var template = _.template($('#paginationTemp').html());
+                this.paginationSelector.html(template({dataSet:dataSet}));
+            },
+            generatedCallback: function(page){
+                $('button',this.paginationSelector).click(function(event) {
+                    var pnum = $(this).data('go');
+                    $(this).addClass('active').siblings('button').removeClass('active');
+                    page.goPage(pnum);
+                });
+            }
         },
         dataRemote: {
             bmob: query,
@@ -41,7 +57,7 @@ function queryData() {
         },
         rowMap: {
             factoryId: function(data) {
-                return data;
+                return '<button type="button" class="bk-margin-5 btn btn-link btn-sm" data-showdetail><i class="fa fa-chevron-down"></i>'+data+'</button>';
             },
             name: function(data) {
                 return data;
@@ -232,6 +248,59 @@ $(function(){
         $(row).html(output);
     });
     $('#tb_content').delegate('[data-remove]', 'click', function(event) {
-        console.log('delete');
+        var that = this;
+        $.magnificPopup.open({
+            items:{
+                src:'#operationConfirm',
+                type: 'inline',
+            },
+
+            fixedContentPos: false,
+            fixedBgPos: true,
+
+            overflowY: 'auto',
+
+            closeBtnInside: true,
+            preloader: false,
+
+            midClick: true,
+            removalDelay: 300,
+            mainClass: 'my-mfp-zoom-in',
+            modal: true,
+            callbacks: {
+                open: function() {
+                    $('[data-deletefactory]').click(function(event) {
+                        var row = $(that).closest('tr')
+                        meta = row.data('meta');
+                        var Factory = Bmob.Object.extend("Factory"),
+                            factory = new Factory();
+                        factory.set('id', meta.id);
+                        factory.destroy({
+                            success: function(p) {
+                                $(row).hide(function(){
+                                    $(this).remove()
+                                });
+                                new PNotify({
+                                    title: '成功!',
+                                    text: '制造商删除成功.',
+                                    type: 'success'
+                                });
+                                event.preventDefault();
+                                $.magnificPopup.close();
+                            },
+                            error: function(p, error) {
+                                showBackendBusyMsg();
+                            }
+                        });
+                    });
+                },
+                close: function(){
+                    $('.modal-confirm').unbind('click');
+                }
+            }
+        })
+    });
+    $('#tb_content').delegate('[data-showdetail]', 'click', function(event) {
+        var meta = $(this).closest('tr').data('meta');
     });
 })

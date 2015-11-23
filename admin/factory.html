@@ -363,6 +363,8 @@
     									</thead>
     									<tbody id='tb_content'>
     									</tbody>
+                                        <tfoot>
+                                        </tfoot>
     								</table>
     							</div>
     							<!-- Modal Form -->
@@ -374,21 +376,21 @@
     									<div class="panel-body bk-noradius">
     										<form class="form-horizontal mb-lg" novalidate="novalidate">
     											<div class="form-group mt-lg">
-    												<label class="col-sm-3 control-label">商品编号</label>
+    												<label class="col-sm-3 control-label">制造商编号</label>
     												<div class="col-sm-9">
-    													<input type="text" name="name" class="form-control" placeholder="商品编号" required/>
+    													<input type="text" name="name" class="form-control" placeholder="制造商编号,该编号一经确定无法被修改" required/>
     												</div>
     											</div>
     											<div class="form-group">
     												<label class="col-sm-3 control-label">名称</label>
     												<div class="col-sm-9">
-    													<input type="email" name="email" class="form-control" placeholder="名称" required/>
+    													<input type="email" name="email" class="form-control" placeholder="名称,厂家的名字" required/>
     												</div>
     											</div>
     											<div class="form-group">
     												<label class="col-sm-3 control-label">描述</label>
     												<div class="col-sm-9">
-    													<textarea rows="5" class="form-control" placeholder="录入商品的描述" required></textarea>
+    													<textarea rows="5" class="form-control" placeholder="厂家的描述,如规模,可不填" required></textarea>
     												</div>
     											</div>
                                                 
@@ -411,6 +413,33 @@
     									</div>
     								</div>
     							</div>
+                                <!-- Modal Confirm -->
+                                <div id="operationConfirm" class="zoom-anim-dialog modal-block modal-block-danger mfp-hide">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h2 class="panel-title">确定要删除吗?</h2>
+                                        </div>
+                                        <div class="panel-body bk-noradius">
+                                            <div class="modal-wrapper">
+                                                <div class="modal-icon">
+                                                    <i class="fa fa-warning"></i>
+                                                </div>
+                                                <div class="modal-text">
+                                                    <h2>危险操作,请仔细确认!</h2>
+                                                    <p>你确定要删除这条商品信息吗,这会导致属于该供货商的商品出现问题！</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="panel-footer">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button class="btn btn-danger modal-confirm" data-deletefactory>确定</button>
+                                                    <button class="btn btn-default modal-dismiss">取消</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
     						</div>
     					</div>
     				</div>
@@ -454,6 +483,7 @@
     <!-- custome vendor Js -->
     <script src='../js/vendor/bmob-min.js'></script>
     <script src='../js/vendor/sprintf.js'></script>
+    <script src="../js/vendor/underscore.js"></script>
     <!-- custome Js -->
     <script src='../js/geraltTable.js'></script>
     <script src='assets/js/custom/global.js'></script>
@@ -482,7 +512,7 @@
     	</td>
     </script>
     <script type="text/template" id='factoryRowTemp'>
-    	<td class="overflow col-md-2">%(id)s</td>
+    	<td class="overflow col-md-2"><button type="button" class="bk-margin-5 btn btn-link btn-sm" data-showdetail><i class="fa fa-chevron-down"></i>%(id)s</button></td>
     	<td class="overflow col-md-1">%(name)s</td>
     	<td class="overflow col-md-2">%(desc)s</td>
     	<td class="col-md-4">%(contact)s</td>
@@ -490,6 +520,21 @@
     	<td class="overflow col-md-1">
             %(operation)s
     	</td>
+    </script>
+    <script type="text/template" id='paginationTemp'>
+        <tr>
+            <td colspan="6" >
+                <div class="bk-margin-5 btn-group">
+                        <button type="button" class="btn btn-default" data-go='prev'>上一页</button>
+                        <button type="button" class="btn btn-default" data-go='first'>首页</button>
+                    <% _.each(dataSet,function(data){ %>
+                        <button type="button" class="btn btn-default" data-go='<%= data %>' ><%= data %></button>
+                    <% }); %>
+                        <button type="button" class="btn btn-default" data-go='last'>尾页</button>
+                        <button type="button" class="btn btn-default" data-go='next'>下一页</button>
+                </div>
+            </td>
+        </tr>
     </script>
 </body>
 
