@@ -341,6 +341,7 @@
     					<div class="panel panel-default bk-bg-white">
     						<div class="panel-heading bk-bg-white">
     							<h6><i class="fa fa-table red"></i><span class="break"></span>商品信息列表</h6>
+                               
     							<div class="panel-actions">
     								<a href="#" class="btn-minimize"><i class="fa fa-caret-up"></i></a>
     								<a href="#" class="btn-close"><i class="fa fa-times"></i></a>
@@ -351,14 +352,14 @@
     								<table class="table table-bordered table-striped table-condensed table-hover">
     									<thead class="thead-inverse">
     									    <tr>
-    									        <th class='col-md-2 overflow'>商品编号
+    									        <th class='col-md-2 overflow' style='vertical-align: middle;'>商品编号
     									            <i class='fa fa-plus fa-fw pull-right text-success' data-target="#addProduct" href="#addProduct" style='cursor:pointer;margin-top:5px' title='新产品'></i>
     									        </th>
-    									        <th class='col-md-1 overflow'>名称</th>
-    									        <th class='col-md-2 overflow'>描述</th>
-    									        <th class='col-md-4 overflow'>照片</th>
-    									        <th class='col-md-2 overflow'>创建时间</th>
-    									        <th class='col-md-1 overflow'>操作</th>
+    									        <th class='col-md-1 overflow' style='vertical-align: middle;'>名称</th>
+    									        <th class='col-md-2 overflow' style='vertical-align: middle;'>描述</th>
+    									        <th class='col-md-4 overflow' style='vertical-align: middle;'>照片</th>
+    									        <th class='col-md-2 overflow' style='vertical-align: middle;'>创建时间</th>
+    									        <th class='col-md-1 overflow' style='vertical-align: middle;'>操作<button class="bk-margin-5 btn btn-success btn-circle" type="button" ><i class="glyphicon glyphicon-search" data-search href="#searchProduct"></i></button></th>
     									    </tr>
     									</thead>
     									<tbody id='tb_content'>
@@ -368,7 +369,7 @@
                                         </tfoot>
     								</table>
     							</div>
-    							<!-- Modal Form -->
+    							<!-- Modal Form add new product-->
     							<div id="addProduct" class="modal-block modal-block-primary mfp-hide">
     								<div class="panel panel-default">
     									<div class="panel-heading">
@@ -431,6 +432,41 @@
     									</div>
     								</div>
     							</div>
+                                <!-- Modal form search product -->
+                                <div id="searchProduct" class="modal-block modal-block-primary mfp-hide">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h2 class="panel-title">搜索产品</h2>
+                                        </div>
+                                        <div class="panel-body bk-noradius">
+                                            <form class="form-horizontal mb-lg" novalidate="novalidate">
+                                                
+                                                <div class="form-group mt-lg">
+                                                    <div class='col-md-3'>
+                                                        <select id="searchType" class="form-control">
+                                                            <option value="productId" selected>商品编号</option>
+                                                            <option value="name">名称</option>
+                                                            <option value="factory">厂家</option>
+                                                            <option value="showCode">展示货号</option>
+                                                        </select>
+                                                    </div>
+                                    
+                                                    <div class="col-sm-9">
+                                                        <input type="text" id="searchValue" class="form-control" placeholder="请在左侧选择搜索的字段名">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="panel-footer">
+                                            <div class="row">
+                                                <div class="col-md-12 text-right">
+                                                    <button class="btn btn-primary modal-confirm" data-searchproduct>确定</button>
+                                                    <button class="btn btn-default modal-dismiss">取消</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!-- Modal Confirm -->
                                 <div id="operationConfirm" class="zoom-anim-dialog modal-block modal-block-primary mfp-hide">
                                     <div class="panel panel-default">
@@ -497,6 +533,7 @@
     <script src="assets/plugins/jqvmap/maps/jquery.vmap.world.js"></script>
     <script src="assets/plugins/owl-carousel/js/owl.carousel.js"></script>
     <script src="assets/plugins/sparkline/js/jquery.sparkline.min.js"></script>
+    <script src="../js/qrcode.js"></script>
     <!-- custome vendor Js -->
     <script src='../js/vendor/bmob-min.js'></script>
     <script src='../js/vendor/sprintf.js'></script>
@@ -575,6 +612,9 @@
                     <% }); %>
                         <button type="button" class="btn btn-default" data-go='last'>尾页</button>
                         <button type="button" class="btn btn-default" data-go='next'>下一页</button>
+                </div>
+                <div style='float:right;margin-top:15px'>
+                    <span class="label label-info">当前搜索条件 ,共有<%= pageTotal %>条信息</span>
                 </div>
             </td>
         </tr>

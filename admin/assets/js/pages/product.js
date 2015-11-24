@@ -1,7 +1,15 @@
+// var qrcode = new QRCode($($0)[0], {
+//             width : 96,//设置宽高
+//             height : 96
+//         });
+//         qrcode.makeCode("http://120.26.82.73/");
 var table = null;
-function queryData() {
+function queryData(condition) {
     var Product = Bmob.Object.extend("Product");
     var query = new Bmob.Query(Product);
+    if($.isFunction(condition)){
+        query = condition(query);
+    }
     // 查询所有数据
     table = geraltTable({
         selector: $('#tb_content'),
@@ -15,7 +23,7 @@ function queryData() {
                     dataSet.splice(0,0,i);
                 };
                 var template = _.template($('#paginationTemp').html());
-                this.paginationSelector.html(template({dataSet:dataSet}));
+                this.paginationSelector.html(template({dataSet:dataSet,pageTotal:page.countTotal()}));
             },
             generatedCallback: function(page){
                 $('button',this.paginationSelector).click(function(event) {
@@ -284,7 +292,80 @@ function bindEventsForElements(){
             }
         }
     });
+    $('i[data-search]').magnificPopup({
+        type: 'inline',
+        preloader: false,
+        focus: '#name',
+        modal: true,
 
+        // When elemened is focused, some mobile browsers in some cases zoom in
+        // It looks not nice, so we disable it:
+        callbacks: {
+            beforeOpen: function() {
+                if($(window).width() < 700) {
+                    this.st.focus = false;
+                } else {
+                    this.st.focus = '#name';
+                }
+            },
+            open: function(){
+                $('[data-searchproduct]').click(function(event) {
+                    var searchType= $('#searchType').val(),
+                        searchKey = null;
+                    switch(searchType){
+                        case "name": 
+                            $.magnificPopup.close();
+                            queryData(function(q){
+                                return q.startsWith("name", $('#searchValue').val());
+                            })
+                            break;
+                        case "productId":
+                            $.magnificPopup.close();
+                            queryData(function(q){
+                                return q.startsWith("productId", $('#searchValue').val());
+                            })
+                            break;
+                        // case "factory":
+                        //     searchKey = "";
+                        //     break;
+                        case "showCode":
+                            var factory = $('#searchValue').val().split('_')[0],
+                                productId = $('#searchValue').val().split('_')[1];
+                            $.magnificPopup.close();
+                            queryData(function(q){
+                                return q.equalTo("productId", productId);
+                            })
+                            break;
+                    }
+                });
+                // var Factory = Bmob.Object.extend("Factory"),
+                //     query = new Bmob.Query(Factory);
+                // query.count({
+                //     success: function(total) {
+                //         query.limit(total).find({
+                //             success: function(results) {
+                //                 var factoryList = $('#factoryList').data('meta',results).empty().append('<option value=0>不指定厂家</option>');
+                //                 $.each(results, function(index, factory) {
+                //                     factoryList.append('<option value='+factory.id+'>'+factory.attributes.name+'</option>');
+                //                 });
+                //             },
+                //             error: function(err) {
+                //                 console.error(err)
+                //             }
+                //         })
+                //     },
+                //     error: function(err) {
+                //         console.error(err);
+                //     }
+                // });
+                
+            },
+            close: function(){
+                $('[data-searchproduct]').unbind('click')
+            }
+            
+        }
+    });
     $('#tb_content').delegate('[data-confirm]', 'click', function(event) {
         if (disableAction) {
             return showBackendBusyMsg();
@@ -456,6 +537,7 @@ function bindEventsForElements(){
         }
 
     });
+
 }
 $(function(){
     initBmob();

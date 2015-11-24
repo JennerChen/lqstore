@@ -8,7 +8,7 @@ var geraltTable = function(options) {
 	const COL_HOLDER = 'GERALTTABLE_COL_HOLDER';
 	// table tr td 与 div+css区别: 
 	// tr,td组合表格可以适用于需要rowspan, colspan的复杂条件下使用,其他与div+css表格基本无区别
-	// div+css表格优势：布局语义化, 适合SEO, 简化代码
+	// div+css表格优势：布局语义化, 适合SEO, 简化代码,但不适合在复杂条件下使用
 	// tr, td优势: 稳定,传统,适用性广
 	/////////////////////
 	// 本例默认div布局 //
@@ -73,6 +73,9 @@ var geraltTable = function(options) {
 	}
 	function generateTable() {
 		if (paging) {
+			if(paging.paginationSelector && $(paging.paginationSelector).length==1){
+				$(paging.paginationSelector).empty();
+			}
 			api.page.goPage(1);
 			return;
 		}
@@ -112,7 +115,8 @@ var geraltTable = function(options) {
 		var page = {};
 		var pageSize,
 			pageNum,
-			total=1;
+			total=1,
+			countTotal = 0;
 
 		if (!paging) {
 			return false;
@@ -182,6 +186,8 @@ var geraltTable = function(options) {
 						data = result.metaData ? result.metaData : data;
 						// update paging details
 						total = Math.ceil(data[dataRemote.pageTotal]/pageSize);
+						countTotal = data[dataRemote.pageTotal];
+						
 						pageNum = data[dataRemote.pageNumName];
 						pageSize = data[dataRemote.pageSizeName];
 
@@ -205,6 +211,7 @@ var geraltTable = function(options) {
 					// get total
 					query.count({
 						success: function(result) {
+							countTotal = result;
 							total = Math.ceil(result/pageSize);
 						},
 						error: function(err){
@@ -257,6 +264,9 @@ var geraltTable = function(options) {
 				return page;
 			}
 			return total;
+		}
+		page.countTotal = function(){
+			return countTotal;
 		}
 		page.initpage = function() {
 			pageSize = paging.pageSize;
